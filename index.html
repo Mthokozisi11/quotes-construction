@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>INOVATE CONSTRUCTION</title>
+  <style>
+    /* ===== Theme & Base ===== */
+    :root{
+      --blue:#0a5ad6;
+      --purple:#6a38c2;
+      --white:#ffffff;
+      --muted:#eef0fb;
+      --accent:#12b76a; /* green for cart counter */
+      --danger:#ef4444;
+      --text:#0a1a2b;
+    }
+    html,body{height:100%; margin:0; font-family:"Times New Roman", Times, serif; color:var(--text); background:var(--muted); -webkit-tap-highlight-color: transparent;}
+    a{color:inherit;}
+    img{max-width:100%; display:block;}
+
+    /* ===== Header ===== */
+    header{
+      text-align:center;
+      background:linear-gradient(135deg,var(--blue),var(--purple));
+      color:var(--white);
+      padding:18px 12px;
+    }
+    .logo{
+      width:92px;height:92px;border-radius:50%;background:#fff;display:inline-block;object-fit:cover;border:3px solid rgba(255,255,255,0.25)
+    }
+    header h1{margin:10px 0 2px; font-size:24px; letter-spacing:0.4px;}
+    header p{margin:0 0 8px; font-size:14px; opacity:0.95;}
+
+    /* ===== Left fixed nav (vertical group pinned left) ===== */
+    .fixed-nav{
+      position:fixed; left:10px; top:50%; transform:translateY(-50%); z-index:1100;
+      display:flex; flex-direction:column; gap:8px; padding:8px;
+      background:rgba(255,255,255,0.06); border-radius:8px;
+      backdrop-filter: blur(4px);
+    }
+    .fixed-nav button{
+      background:var(--white); color:var(--blue); border:0; padding:8px 12px; border-radius:999px; cursor:pointer;
+      font-weight:700; box-shadow:0 6px 14px rgba(10,20,40,0.06);
+    }
+
+    /* ===== Main content wrapper ===== */
+    .wrap{ max-width:1100px; margin:20px auto 110px; padding:12px; }
+
+    .lead h3{ font-size:18px; margin:6px 0 6px; color:var(--text); text-align:center; color:var(--blue);}
+    .lead h2{ font-size:30px; margin:0 0 10px; text-align:center; color:var(--blue);}
+
+    /* ===== Services grid ===== */
+    .services{
+      display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      margin-top:12px;
+    }
+    .card{
+      background:var(--white); border-radius:12px; overflow:hidden; border:1px solid rgba(10,20,40,0.06);
+      box-shadow:0 8px 22px rgba(10,20,40,0.04);
+    }
+    .card img{ height:140px; object-fit:cover; width:100%; }
+    .label{ text-align:center; padding:10px; font-weight:800; color:var(--white); background:linear-gradient(90deg,var(--blue),var(--purple)); }
+    .card .body{ padding:10px; display:flex; justify-content:center; gap:8px;}
+    .btn{ padding:8px 10px; border-radius:8px; border:0; cursor:pointer; font-weight:700; }
+    .btn-primary{ background:var(--blue); color:var(--white); }
+    .btn-secondary{ background:#f3f4ff; color:var(--blue); border:1px solid rgba(10,20,40,0.04); }
+
+    /* ===== Cart (top-right) ===== */
+    .cart{
+      position:fixed; right:12px; top:12px; z-index:1200; display:flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,0.95); border-radius:999px; padding:8px 10px; box-shadow:0 10px 30px rgba(10,20,40,0.08);
+      cursor:pointer;
+    }
+    .cart-icon{ width:26px; height:26px; display:inline-block; border-radius:6px; border:2px solid var(--blue); background:var(--white); }
+    .cart-count{
+      min-width:22px; height:22px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center;
+      background:var(--accent); color:#003b1f; font-weight:800; font-size:0.85rem; padding:0 6px;
+    }
+
+    /* fly bubble for animation */
+    .fly-bubble{ position:fixed; width:18px; height:18px; border-radius:50%; background:var(--purple); z-index:2000; pointer-events:none; }
+
+    /* ===== Modal/Popup ===== */
+    .modal{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:1500;
+      background:rgba(7,9,23,0.6);
+      padding:18px;
+    }
+    .modal.open{ display:flex; }
+    .dialog{
+      width:100%; max-width:460px; background:var(--white); border-radius:12px; overflow:auto; max-height:92vh; position:relative;
+      box-shadow:0 30px 68px rgba(10,20,40,0.28);
+    }
+    .dialog header{ padding:12px 14px; background:linear-gradient(90deg,var(--blue),var(--purple)); color:var(--white); display:flex; justify-content:space-between; align-items:center; border-radius:12px 12px 0 0;}
+    .dialog .content{ padding:12px 14px; }
+    .dialog .content label{ display:flex; align-items:center; gap:8px; margin:8px 0; }
+    .dialog .content textarea, .dialog .content input[type="text"], .dialog .content input[type="number"]{ width:100%; padding:8px; border-radius:6px; border:1px solid #e6e9f5; font-family:inherit; }
+
+    .dialog .actions{ padding:12px 14px; display:flex; gap:8px; justify-content:flex-end; border-top:1px solid #f3f4ff; }
+
+    /* ===== Cart drawer (right) ===== */
+    .drawer{
+      position:fixed; right:12px; top:58px; width:min(420px,94vw); max-height:78vh; overflow:auto; z-index:1300;
+      background:var(--white); border-radius:12px; border:1px solid rgba(10,20,40,0.04); display:none; padding:8px;
+      box-shadow:0 30px 68px rgba(10,20,40,0.16);
+    }
+    .drawer.open{ display:block; }
+    .drawer header{ display:flex; justify-content:space-between; align-items:center; padding:8px 4px 12px; border-bottom:1px solid #f3f4ff; }
+    .drawer .list{ padding:8px; display:flex; flex-direction:column; gap:8px; }
+    .drawer .item{ background:#fafaff; border:1px solid rgba(10,20,40,0.03); padding:8px; border-radius:8px; }
+    .drawer .form{ padding:10px; display:flex; flex-direction:column; gap:8px; }
+    .drawer input, .drawer textarea{ padding:8px; border-radius:6px; border:1px solid #e6e9f5; font-family:inherit; }
+    .drawer button{ padding:10px; border-radius:8px; border:0; background:var(--blue); color:var(--white); font-weight:800; cursor:pointer; }
+
+    /* ===== Gallery slider & lightbox ===== */
+    .gallery-wrap{ margin-top:14px; background:var(--white); border-radius:10px; padding:10px; border:1px solid rgba(10,20,40,0.03); }
+    .slider{ display:flex; gap:10px; overflow:auto; padding:8px; }
+    .slider img{ width:220px; height:120px; object-fit:cover; border-radius:8px; cursor:pointer; flex:0 0 auto; }
+    .lightbox{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:1700; background:rgba(0,0,0,0.85); padding:12px; }
+    .lightbox.open{ display:flex; }
+    .lightbox .inner{ max-width:960px; width:100%; position:relative; }
+    .lightbox img{ width:100%; height:auto; border-radius:8px; }
+    .lightbox .close{ position:absolute; top:-10px; right:-10px; background:var(--white); color:#111; border-radius:999px; width:42px; height:42px; border:0; font-weight:800; cursor:pointer; }
+
+    /* ===== Footer ===== */
+    footer{ position:fixed; bottom:0; left:0; right:0; padding:8px 12px; background:linear-gradient(90deg,var(--blue),var(--purple)); color:var(--white); text-align:center; font-size:13px; z-index:100; }
+
+    /* ===== Responsive tweaks ===== */
+    @media (max-width:700px){
+      header h1{ font-size:20px; }
+      header p{ font-size:13px; }
+      .card img{ height:110px; }
+      .slider img{ width:160px; height:100px; }
+      .fixed-nav{ left:8px; top:auto; bottom:10px; flex-direction:row; padding:6px; border-radius:8px; transform:none; }
+      .drawer{ right:8px; top:68px; width:92vw; }
+      .dialog{ max-width:94vw; }
+    }
+	
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header>
+    <!-- placeholder for logo image you will add: logo.jpeg -->
+    <img class="logo" src="logo.jpeg" alt="INOVATE CONSTRUCTION logo (placeholder)">
+    <h1>INOVATE CONSTRUCTIONS</h1>
+    <p>Quality constructions reasonable pricing.</p>
+  </header>
+
+  <!-- ===== Left fixed nav (Home/About/Contact) ===== -->
+  <div class="fixed-nav" role="navigation" aria-label="Quick menu">
+    <button onclick="scrollToTop()">Home</button>
+    <button onclick="openModal('aboutModal')">About</button>
+    <button onclick="openModal('contactModal')">Contact</button>
+  </div>
+
+  <!-- ===== Cart icon (top-right) ===== -->
+  <div class="cart" id="cartToggle" title="Open project cart" aria-label="Project cart" onclick="toggleDrawer()">
+    <div class="cart-icon" aria-hidden="true"></div>
+    <div class="cart-count" id="cartCount">0</div>
+  </div>
+
+  <!-- ===== Main wrap ===== -->
+  <main class="wrap" id="main">
+
+    <!-- Lead -->
+    <section class="lead">
+      <h3>We offer these services to you. Specify your project proposal and we'll contact you shortly.</h3>
+      <h2>Choose Services Needed for your Project.</h2>
+    </section>
+
+    <!-- Services grid -->
+    <section aria-label="Services">
+      <div class="services">
+        <!-- Tiling -->
+        <article class="card">
+          <img src="tiling.jpeg" alt="Tiling">
+          <div class="label">TILING</div>
+          <div class="body">
+            <button class="btn btn-primary" onclick="openModal('tilingModal')">Select</button>
+          </div>
+        </article>
+
+        <!-- Plumbing -->
+        <article class="card">
+          <img src="plumbing.jpeg" alt="Plumbing">
+          <div class="label">PLUMBING</div>
+          <div class="body"><button class="btn btn-primary" onclick="openModal('plumbingModal')">Select</button></div>
+        </article>
+
+        <!-- Construction -->
+        <article class="card">
+          <img src="construction.jpeg" alt="Construction">
+          <div class="label">CONSTRUCTION</div>
+          <div class="body"><button class="btn btn-primary" onclick="openModal('constructionModal')">Select</button></div>
+        </article>
+
+        <!-- Carpentry -->
+        <article class="card">
+          <img src="carpentry.jpeg" alt="Carpentry">
+          <div class="label">CARPENTRY</div>
+          <div class="body"><button class="btn btn-primary" onclick="openModal('carpentryModal')">Select</button></div>
+        </article>
+
+        <!-- Architecture -->
+        <article class="card">
+          <img src="architecture.jpeg" alt="Architecture">
+          <div class="label">ARCHITECTURE</div>
+          <div class="body"><button class="btn btn-primary" onclick="openModal('architectureModal')">Select</button></div>
+        </article>
+
+        <!-- Paving -->
+        <article class="card">
+          <img src="paving.jpeg" alt="Paving">
+          <div class="label">PAVING</div>
+          <div class="body"><button class="btn btn-primary" onclick="openModal('pavingModal')">Select</button></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery-wrap" aria-label="Our work">
+      <h3 style="text-align:center; color:var(--blue); margin:12px 0 6px;">OUR PROJECTS</h3>
+      <div class="slider" id="slider">
+        <img src="work1.jpg" alt="Work 1" onclick="openLightbox(this.src)">
+        <img src="work2.jpg" alt="Work 2" onclick="openLightbox(this.src)">
+        <img src="work3.jpg" alt="Work 3" onclick="openLightbox(this.src)">
+        <img src="work4.jpg" alt="Work 4" onclick="openLightbox(this.src)">
+		<img src="work5.jpg" alt="Work 5" onclick="openLightbox(this.src)">
+		<img src="work6.jpg" alt="Work 6" onclick="openLightbox(this.src)">
+		<img src="work7.jpg" alt="Work 7" onclick="openLightbox(this.src)">
+		<img src="work8.jpg" alt="Work 8" onclick="openLightbox(this.src)">
+		<img src="work9.jpg" alt="Work 9" onclick="openLightbox(this.src)">
+		<img src="work10.jpg" alt="Work 10" onclick="openLightbox(this.src)">
+		<img src="work11.jpg" alt="Work 11" onclick="openLightbox(this.src)">
+		<img src="work12.jpg" alt="Work 12" onclick="openLightbox(this.src)">
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    Human Resources: 067 003 6186 • Office: 076 574 1341 • Email: mthokoshange20@gmail.com
+  </footer>
+
+  <!-- ===== Modals: About & Contact (fixed left nav) ===== -->
+  <div class="modal" id="aboutModal" role="dialog" aria-modal="true">
+    <div class="dialog" role="document">
+      <header>
+        <div>About Us</div>
+        <button class="btn-secondary" onclick="closeModal('aboutModal')">✕</button>
+      </header>
+      <div class="content">
+        <p>We are a Vibrant, Innovative construction company delivering quality workmanship from architectural design to full construction and finishing. Powered by youth trained at TVET colleges, we combine fresh thinking with solid skills to deliver reliable results at fair, transparent pricing.</p>
+        <div class="actions"><button class="btn btn-primary" onclick="closeModal('aboutModal')">Close</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="contactModal" role="dialog" aria-modal="true">
+    <div class="dialog" role="document">
+      <header>
+        <div>Contact</div>
+        <button class="btn-secondary" onclick="closeModal('contactModal')">✕</button>
+      </header>
+      <div class="content">
+        <p>For more details on projects and quotations:</p>
+        <ul>
+          <li>HR: 067 003 6186</li>
+          <li>Office: 076 574 1341</li>
+          <li>Email: <a href="mailto:mthokoshange20@gmail.com">mthokoshange20@gmail.com</a></li>
+        </ul>
+        <div class="actions"><button class="btn btn-primary" onclick="closeModal('contactModal')">Close</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Service Modals (full specifications) ===== -->
+
+  <!-- Tiling Modal -->
+  <div class="modal" id="tilingModal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <header><div>Tiling — Quote</div><button class="btn-secondary" onclick="closeModal('tilingModal')">✕</button></header>
+      <div class="content">
+        <label>Number of rooms <input type="number" id="tiling_rooms" min="0" placeholder="Total Rooms" ></label>
+        <label><input type="checkbox" name="tiling_opts" value="Bathroom included" /> Bathroom included</label>
+        <label><input type="checkbox" name="tiling_opts" value="Kitchen walls" /> Kitchen walls</label>
+        <label><input type="checkbox" name="tiling_opts" value="Cladding" /> Cladding</label>
+        <label>Notes <textarea id="tiling_notes" rows="3" placeholder="Measurements, tile size, etc."></textarea></label>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="closeModal('tilingModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="addServiceFromModal('Tiling','tilingModal')">Add to Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plumbing Modal -->
+  <div class="modal" id="plumbingModal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <header><div>Plumbing — Options</div><button class="btn-secondary" onclick="closeModal('plumbingModal')">✕</button></header>
+      <div class="content">
+        <label><input type="checkbox" name="plumb_opts" value="Install WC" /> Install WC</label>
+        <label><input type="checkbox" name="plumb_opts" value="Install bath" /> Install bath</label>
+        <label><input type="checkbox" name="plumb_opts" value="Install sink" /> Install sink / basin</label>
+        <label><input type="checkbox" name="plumb_opts" value="Install shower" /> Install shower</label>
+        <label><input type="checkbox" name="plumb_opts" value="Fix leaks" /> Fix leaks</label>
+        <label><input type="checkbox" name="plumb_opts" value="Maintenance" /> Maintenance</label>
+        <label><input type="checkbox" name="plumb_opts" value="Kitchen sink" /> Kitchen sink</label>
+        <label><input type="checkbox" name="plumb_opts" value="Gutter installation" /> Gutter installation</label>
+        <label><input type="checkbox" name="plumb_opts" value="Washing machine fitting" /> Washing machine fitting</label>
+        <label><input type="checkbox" name="plumb_opts" value="Install taps" /> Install taps</label>
+        <label><input type="checkbox" name="plumb_opts" value="Install geyser" /> Install geyser</label>
+        <label><input type="checkbox" name="plumb_opts" value="Blockage" /> Blockage</label>
+        <label><input type="checkbox" name="plumb_opts" value="Build septic tank" /> Build septic tank</label>
+        <label>Notes <textarea id="plumbing_notes" rows="3" placeholder="Extra details"></textarea></label>
+        <p style="margin:8px 0; font-weight:700;">Or contact plumber directly: 076 574 1341</p>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="closeModal('plumbingModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="addServiceFromModal('Plumbing','plumbingModal')">Add to Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Construction Modal -->
+  <div class="modal" id="constructionModal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <header><div>Construction — Specifications</div><button class="btn-secondary" onclick="closeModal('constructionModal')">✕</button></header>
+      <div class="content">
+        <label><input type="checkbox" name="construction_opts" value="Brick laying" /> Brick laying</label>
+        <label><input type="checkbox" name="construction_opts" value="Plaster" /> Plaster</label>
+        <label><input type="checkbox" name="construction_opts" value="Roofing" /> Roofing</label>
+        <label><input type="checkbox" name="construction_opts" value="Concrete slab" /> Concrete slab</label>
+		<label><input type="checkbox" name="construction_opts" value="Electricity" /> Electricity installation</label>
+        <label>Notes <textarea id="construction_notes" rows="3" placeholder="Dimensions, storeys, concrete mix etc."></textarea></label>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="closeModal('constructionModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="addServiceFromModal('Construction','constructionModal')">Add to Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carpentry Modal -->
+  <div class="modal" id="carpentryModal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <header><div>Carpentry — Specifications</div><button class="btn-secondary" onclick="closeModal('carpentryModal')">✕</button></header>
+      <div class="content">
+        <label><input type="checkbox" name="carp_opts" value="Built-in cupboards" /> Built-in cupboards</label>
+        <label><input type="checkbox" name="carp_opts" value="Kitchen cupboards" /> Kitchen cupboards</label>
+        <label><input type="checkbox" name="carp_opts" value="Windows installation" /> Windows installation</label>
+        <label><input type="checkbox" name="carp_opts" value="Doors installation" /> Doors installation</label>
+		<label><input type="checkbox" name="construction_opts" value="Carport" /> Carport</label>
+        <label>Notes <textarea id="carpentry_notes" rows="3" placeholder="Sizes, finish, timber type etc."></textarea></label>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="closeModal('carpentryModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="addServiceFromModal('Carpentry','carpentryModal')">Add to Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture Modal -->
+  <div class="modal" id="architectureModal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <header><div>Architecture — Specifications</div><button class="btn-secondary" onclick="closeModal('architectureModal')">✕</button></header>
+      <div class="content">
+        <label>Notes <textarea id="architecture_notes" rows="4" placeholder="Design brief, new build, extensions, approvals, etc."></textarea></label>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="closeModal('architectureModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="addServiceFromModal('Architecture','architectureModal')">Add to Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paving Modal -->
+  <div class="modal" id="pavingModal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <header><div>Paving — Specifications</div><button class="btn-secondary" onclick="closeModal('pavingModal')">✕</button></header>
+      <div class="content">
+        <label>Notes <textarea id="paving_notes" rows="3" placeholder="Area, block type, colour, square metres, etc."></textarea></label>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="closeModal('pavingModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="addServiceFromModal('Paving','pavingModal')">Add to Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Cart Drawer ===== -->
+  <aside class="drawer" id="drawer" aria-label="Project cart">
+    <header>
+      <strong>Your Project</strong>
+      <div>
+        <button class="btn-secondary" onclick="clearCart()" title="Clear cart">Clear</button>
+        <button class="btn-secondary" onclick="toggleDrawer()">Close</button>
+      </div>
+    </header>
+
+    <div class="list" id="cartList"></div>
+
+    <form class="form" id="clientForm" onsubmit="submitProject(event)">
+      <label>Client name<input type="text" id="clientName" required placeholder="Full name"></label>
+      <label>WhatsApp number<input type="text" id="clientPhone" required placeholder="e.g. 0761234567"></label>
+      <label>Address<textarea id="clientAddress" required placeholder="Street, suburb, town/city"></textarea></label>
+      <button type="submit">Submit Project & Send Quote</button>
+      <div id="thankYou" style="display:none; color:var(--accent); font-weight:800; margin-top:8px;">Thank you — your project slip was sent to WhatsApp.</div>
+    </form>
+  </aside>
+
+  <!-- ===== Lightbox for gallery ===== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <div class="inner">
+      <button class="close" onclick="closeLightbox()">✕</button>
+      <img id="lightboxImg" src="" `alt="Project preview">
+      <div style="color:var(--white); text-align:center; margin-top:8px;">Contact: 076 574 1341 • mthokoshange20@gmail.com</div>
+    </div>
+  </div>
+
+  <!-- ===== JS Logic ===== -->
+  <script>
+    // ===== Helper utilities =====
+    const qs = sel => document.querySelector(sel);
+    const qsa = sel => Array.from(document.querySelectorAll(sel));
+
+    // Mobile-friendly scroll to top
+    function scrollToTop(){ window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    // Open/close generic modals
+    function openModal(id){ qs('#'+id).classList.add('open'); }
+    function closeModal(id){ qs('#'+id).classList.remove('open'); }
+
+    // ===== Cart data model =====
+    let cart = []; // {id, service, options:[], notes:string}
+    const cartCountEl = qs('#cartCount');
+    const cartListEl  = qs('#cartList');
+    const drawerEl    = qs('#drawer');
+
+    // Toggle drawer
+    function toggleDrawer(){
+      const wasOpen = drawerEl.classList.contains('open');
+      drawerEl.classList.toggle('open', !wasOpen);
+      if(!wasOpen) renderCartList();
+    }
+
+    function openDrawer(){ drawerEl.classList.add('open'); renderCartList(); }
+    function closeDrawer(){ drawerEl.classList.remove('open'); }
+
+    // clear cart
+    function clearCart(){
+      if(!confirm('Remove all selected services from project?')) return;
+      cart = [];
+      updateCartUI();
+      renderCartList();
+    }
+
+    // ===== Add service from modal (gathers inputs & checkboxes) =====
+    function addServiceFromModal(serviceName, modalId){
+      // collect checkboxes & notes inside the modal
+      const modal = qs('#' + modalId);
+      if(!modal) return;
+      const checked = Array.from(modal.querySelectorAll('input[type="checkbox"]:checked')).map(c => c.value);
+      // Find any textareas or inputs that might hold notes/values
+      const notesEls = modal.querySelectorAll('textarea, input[type="text"], input[type="number"]');
+      const notes = Array.from(notesEls).map(el => {
+        if(el.id && el.value.trim()) return (el.placeholder? (el.placeholder + ': ') : '') + el.value.trim();
+        return '';
+      }).filter(Boolean).join(' | ');
+
+      // Build entry object
+      const id = Date.now() + Math.floor(Math.random()*999);
+      const entry = { id, service: serviceName, options: checked, notes: notes };
+
+      // If nothing chosen and no notes, ask user to pick at least one
+      if(entry.options.length === 0 && !entry.notes){
+        alert('Please choose at least one option or add a note before adding to the project.');
+        return;
+      }
+
+      cart.push(entry);
+      updateCartUI();
+
+      // animate little bubble from the modal's primary button to the cart
+      // we try to locate the clicked "Add to Project" button inside the modal
+      const addBtn = modal.querySelector('button.btn.btn-primary') || modal.querySelector('button');
+      if(addBtn) animateFly(addBtn);
+
+      // close modal after adding
+      closeModal(modalId);
+    }
+
+    // Update cart UI counter
+    function updateCartUI(){
+      cartCountEl.textContent = cart.length;
+      // small pulsate animation when count increases
+      cartCountEl.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.28)' }, { transform: 'scale(1)' }], { duration: 420 });
+    }
+
+    // Render cart list in drawer
+    function renderCartList(){
+      cartListEl.innerHTML = '';
+      if(cart.length === 0){
+        cartListEl.innerHTML = '<div style="padding:12px;color:#334;">No services selected yet.</div>';
+        return;
+      }
+      cart.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        let html = `<strong>${i+1}. ${escapeHtml(item.service)}</strong>`;
+        if(item.options && item.options.length) html += `<div style="margin-top:6px">${escapeHtml(item.options.join(', '))}</div>`;
+        if(item.notes) html += `<div style="margin-top:6px; font-style:italic; color:#334">${escapeHtml(item.notes)}</div>`;
+        // add remove button
+        html += `<div style="margin-top:8px; text-align:right"><button class="btn-secondary" onclick="removeCartItem(${item.id})">Remove</button></div>`;
+        div.innerHTML = html;
+        cartListEl.appendChild(div);
+      });
+    }
+
+    function removeCartItem(id){
+      cart = cart.filter(c => c.id !== id);
+      updateCartUI();
+      renderCartList();
+    }
+
+    // Escape for safety in displayed HTML
+    function escapeHtml(s = ''){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c] || c)); }
+
+    // ===== Fly-to-cart animation =====
+    function animateFly(fromEl){
+      // get fromEl center coordinates
+      const fromRect = fromEl.getBoundingClientRect();
+      const startX = fromRect.left + fromRect.width/2;
+      const startY = fromRect.top + fromRect.height/2;
+      // get cart center
+      const cartRect = qs('#cartToggle').getBoundingClientRect();
+      const endX = cartRect.left + cartRect.width/2;
+      const endY = cartRect.top + cartRect.height/2;
+      // create bubble
+      const bubble = document.createElement('div');
+      bubble.className = 'fly-bubble';
+      document.body.appendChild(bubble);
+      bubble.style.left = startX + 'px';
+      bubble.style.top  = startY + 'px';
+      bubble.style.transform = 'translate(-50%,-50%) scale(1)';
+      bubble.style.opacity = '1';
+      // animate using requestAnimationFrame and CSS transitions
+      // set transition
+      bubble.style.transition = 'transform 650ms cubic-bezier(.2,.8,.2,1), top 650ms cubic-bezier(.2,.8,.2,1), left 650ms cubic-bezier(.2,.8,.2,1), opacity 650ms';
+      // trigger layout then move
+      requestAnimationFrame(() => {
+        bubble.style.left = endX + 'px';
+        bubble.style.top = endY + 'px';
+        bubble.style.transform = 'translate(-50%,-50%) scale(0.35)';
+        bubble.style.opacity = '0.0';
+      });
+      setTimeout(() => bubble.remove(), 700);
+    }
+
+    // ===== Submit Project (opens WhatsApp) =====
+    function submitProject(e){
+      if(e) e.preventDefault();
+      // client values
+      const name = qs('#clientName').value.trim();
+      const phoneInput = qs('#clientPhone').value.trim();
+      const address = qs('#clientAddress').value.trim();
+      if(!name || !phoneInput || !address){
+        alert('Please fill name, WhatsApp number and address before submitting.');
+        return;
+      }
+      if(cart.length === 0){
+        alert('Please add at least one service to your project before submitting.');
+        return;
+      }
+
+      // format numbers: company number should be 27670036196 (SA)
+      const adminNumber = normalizeSANumber('0670036196'); // company's receiving number
+      const clientNumber = normalizeSANumber(phoneInput);
+
+      // assemble project summary
+      const projectLines = cart.map((c, i) => {
+        const opts = (c.options && c.options.length) ? c.options.join('; ') : 'via notes';
+        return `${i+1}. ${c.service} — ${opts}${c.notes ? ' | Notes: ' + c.notes : ''}`;
+      }).join('\\n');
+
+      const summary = `INOVATE CONSTRUCTION - Proposed project\\nClient: ${name}\\nWhatsApp: ${phoneInput}\\nAddress: ${address}\\n\\nServices:\\n${projectLines}\\n\\nThank you — we will get back to you shortly.`;
+      // message to company
+      const urlCompany = `https://wa.me/${adminNumber}?text=${encodeURIComponent(summary)}`;
+      // message to client (thank you and summary)
+      const clientMsg = `Thank you ${name}! We received your project.\\n\\nSummary:\\n${projectLines}\\n\\nWe will contact you soon. — INOVATE CONSTRUCTION`;
+      const urlClient = `https://wa.me/${clientNumber}?text=${encodeURIComponent(clientMsg)}`;
+
+      // open both (mobile browsers will open WhatsApp app if installed)
+      window.open(urlCompany, '_blank');
+      // small delay to avoid blocking popup blockers (but still immediate)
+      setTimeout(()=> window.open(urlClient, '_blank'), 300);
+
+      // show thank you in UI and clear cart
+      qs('#thankYou').style.display = 'block';
+      cart = [];
+      updateCartUI();
+      renderCartList();
+      // close drawer after a moment
+      setTimeout(() => { closeDrawer(); }, 800);
+    }
+
+    // Normalize SA numbers to international format (27...)
+    function normalizeSANumber(raw){
+      if(!raw) return raw;
+      let digits = raw.replace(/\D/g, '');
+      if(digits.startsWith('27')) return digits;
+      if(digits.startsWith('0')) return '27' + digits.slice(1);
+      // if 9-digit (without leading 0), assume local and add 27
+      if(digits.length === 9) return '27' + digits;
+      return digits; // best effort
+    }
+
+    // ===== Lightbox (gallery) =====
+    function openLightbox(src){
+      qs('#lightboxImg').src = src;
+      qs('#lightbox').classList.add('open');
+    }
+    function closeLightbox(){ qs('#lightbox').classList.remove('open'); }
+
+    // ===== Wire: open each service modal by id string =====
+    function openModalId(modalId){ qs('#' + modalId).classList.add('open'); }
+    // small helpers used in markup
+    window.openModal = function(id){
+      const mapping = {
+        'tilingModal': 'tilingModal',
+        'plumbingModal': 'plumbingModal',
+        'constructionModal': 'constructionModal',
+        'carpentryModal': 'carpentryModal',
+        'architectureModal': 'architectureModal',
+        'pavingModal': 'pavingModal',
+        'aboutModal': 'aboutModal',
+        'contactModal': 'contactModal'
+      };
+      if(mapping[id]) qs('#' + mapping[id]).classList.add('open');
+    };
+
+    // Allow clicking outside dialog to close modals
+    qsa('.modal').forEach(m => {
+      m.addEventListener('click', e => {
+        if(e.target === m) m.classList.remove('open');
+      });
+    });
+
+    // Close lightbox when clicking outside inner
+    qs('#lightbox')?.addEventListener('click', e => { if(e.target.id === 'lightbox') closeLightbox(); });
+
+    // Close drawer if click outside on mobile
+    document.addEventListener('click', (e) => {
+      const drawerOpen = drawerEl.classList.contains('open');
+      if(!drawerOpen) return;
+      const isInside = e.composedPath().includes(drawerEl) || e.composedPath().includes(qs('#cartToggle'));
+      if(!isInside && window.innerWidth < 700){
+        drawerEl.classList.remove('open');
+      }
+    });
+
+    // initialise small interactions
+    (function init(){
+      updateCartUI();
+      // connect global functions used in markup
+      window.toggleDrawer = function(){ drawerEl.classList.toggle('open'); renderCartList(); };
+      window.openLightbox = openLightbox;
+      window.closeLightbox = closeLightbox;
+      window.clearCart = clearCart;
+      window.addServiceFromModal = addServiceFromModal;
+      window.openModal = id => qs('#' + id).classList.add('open');
+      window.closeModal = id => qs('#' + id).classList.remove('open');
+      // connect form submit
+      qs('#clientForm').addEventListener('submit', submitProject);
+	  
+    })();
+	
+	
+	
+	
+	
+  </script>
+</body>
+</html>

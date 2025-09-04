@@ -34,10 +34,10 @@
 
     /* ===== Left fixed nav (vertical group pinned left) ===== */
     .fixed-nav{
-      position:fixed; left:12px; top:12px; transform:translateY(-50%); z-index:1100;
+      position:fixed; left:12px; top:12px; transform:translateX(-50%); 
       display:flex; flex-direction:row; gap:8px; padding:8px;
       background:rgba(255,255,255,0.06); border-radius:8px;
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);z-index:1200;
 	  
     }
     .fixed-nav button{
@@ -146,8 +146,8 @@
   <header>
     <!-- placeholder for logo image you will add: logo.jpeg -->
     <img class="logo" src="logo.jpeg" alt="INOVATE CONSTRUCTION logo (placeholder)">
-    <h1>INOVATE CONSTRUCTIONS</h1>
-    <p>Quality Constructions, Reasonable Pricing.</p>
+    <h1>INNOVATIVE CONSTRUCTIONS & TECH </h1>
+    <p>Quality Services, Reasonable Pricing.</p>
   </header>
 
   <!-- ===== Left fixed nav (Home/About/Contact) ===== -->
@@ -218,6 +218,21 @@
           <div class="label">PAVING</div>
           <div class="body"><button class="btn btn-primary" onclick="openModal('pavingModal')">Select</button></div>
         </article>
+		
+		<!-- Landscaping -->
+        <article class="card">
+          <img src="land.jpeg" alt="Landscaping">
+          <div class="label">LANDSCAPING</div>
+          <div class="body"><button class="btn btn-primary" onclick="openModal('landscapingModal')">Select</button></div>
+        </article>
+		
+		<!-- Technical Support -->
+        <article class="card">
+          <img src="it.jpeg" alt="Itsupport">
+          <div class="label">IT SUPPORT</div>
+          <div class="body"><button class="btn btn-primary" onclick="openModal('itsupportModal')">Select</button></div>
+        </article>
+		
       </div>
     </section>
 
@@ -227,10 +242,10 @@
       <div class="slider" id="slider">
         <img src="work1.jpg" alt="Work 1" onclick="openLightbox(this.src)">
         <img src="work2.jpg" alt="Work 2" onclick="openLightbox(this.src)">
-        <img src="work3.jpg" alt="Work 3" onclick="openLightbox(this.src)">
+        <img src="work15.jpg" alt="Work 3" onclick="openLightbox(this.src)">
         <img src="work4.jpg" alt="Work 4" onclick="openLightbox(this.src)">
 		<img src="work5.jpg" alt="Work 5" onclick="openLightbox(this.src)">
-		<img src="work6.jpg" alt="Work 6" onclick="openLightbox(this.src)">
+		<img src="work13.jpg" alt="Work 6" onclick="openLightbox(this.src)">
 		<img src="work7.jpg" alt="Work 7" onclick="openLightbox(this.src)">
 		<img src="work8.jpg" alt="Work 8" onclick="openLightbox(this.src)">
 		<img src="work9.jpg" alt="Work 9" onclick="openLightbox(this.src)">
@@ -389,6 +404,48 @@
         <div class="actions">
           <button class="btn btn-secondary" onclick="closeModal('pavingModal')">Cancel</button>
           <button class="btn btn-primary" onclick="addServiceFromModal('Paving','pavingModal')">Add to Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Construction Modal -->
+  <div class="modal" id="landscapingModal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <header><div>select service</div><button class="btn-secondary" onclick="closeModal('landscapingModal')">✕</button></header>
+      <div class="content">
+        <label><input type="checkbox" name="landscape_opt" value="Grass Trimming" /> Grass Trimming</label>
+        <label><input type="checkbox" name="landscape_opts" value="Garden Maintanance" />Garden Maintanance</label>
+        <label><input type="checkbox" name="landscape_opts" value="Tree Felling" />Tree Felling </label>
+        <label><input type="checkbox" name="landscape_opts" value="Waste Collection" />Waste Collection </label>
+		<label><input type="checkbox" name="landscape_opts" value="Flower Planting" />Flower Planting </label>
+        <label>Notes <textarea id="landscape Notes" rows="3" placeholder="specify what you need, we got you...."></textarea></label>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="closeModal('landscapingModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="addServiceFromModal('Landscaping','landscapingModal')">Add to Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+	<!-- IT SUPPORT Modal -->
+  <div class="modal" id="itsupportModal" role="dialog" aria-modal="true">
+    <div class="dialog">
+      <header><div>Technical Support</div><button class="btn-secondary" onclick="closeModal('itsupportModal')">✕</button></header>
+      <div class="content">
+        <label><input type="checkbox" name="itsupport_opts" value="Computer Repairs" /> Computer Repairs</label>
+        <label><input type="checkbox" name="itsupport_opts" value="Printer Config" /> Printer Config</label>
+        <label><input type="checkbox" name="itsupport_opts" value="software installation" />Software installation</label>
+        <label><input type="checkbox" name="itsupport_opts" value="LAN Config" /> Networking</label>
+		<label><input type="checkbox" name="itsupport_opts" value="LAN Config" /> Information System Design</label>
+		<label><input type="checkbox" name="itsupport_opts" value="WEB Design" /> Web & Software Development</label>
+		<label><input type="checkbox" name="itsupport_opts" value="CCTV installation" /> CCTV Installation</label>
+		<label><input type="checkbox" name="itsupport_opts" value="Sliding gate Motor" /> Sliding Gate Automation </label>
+		<label><input type="checkbox" name="itsupport_opts" value="Electrical Maintanance" /> Domestic Electrical Mainctanance</label>
+        <label>Notes <textarea id="itsupport_notes" rows="3" placeholder="Let us know what you need and we got you."></textarea></label>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="closeModal('itsupportModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="addServiceFromModal('Itsupport','itsupportModal')">Add to Project</button>
         </div>
       </div>
     </div>
